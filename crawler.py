@@ -82,8 +82,15 @@ def start_crawl():
 
         ###### 출력 테스트 ######
         get_articles = rssCrawl.print_articles(entries, company, res.encoding)
-        for title, link in get_articles:
+        for title, link, tokens in get_articles:
             articles[id] = [title, link]
+
+            for token in tokens:
+                if keywords.get(token, -1) == -1:
+                    keywords[token] = [id]
+                else:
+                    keywords[token].append(id)
+
             id += 1
 
 
@@ -103,4 +110,4 @@ def start_crawl():
     last = now.strftime('%Y%m%d%H%M%S')[2:]
 
     # return count, str(datetime.timedelta(seconds=sec)), last
-    return articles
+    return articles, keywords

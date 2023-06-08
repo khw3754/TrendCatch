@@ -2,11 +2,16 @@ import tkinter as tk
 import crawler
 
 def button_clicked():
-    articles = crawler.start_crawl()
+    articles, keywords = crawler.start_crawl()
 
-    for id in articles.keys():
-        title, link = articles[id]
-        listBox.insert(tk.END, title)
+    # for id in articles.keys():
+    #     title, link = articles[id]
+    #     listBox.insert(tk.END, title)
+    print(keywords)
+    # keywords = sorted(keywords, key=lambda x: len(keywords[x]))
+    for keyword in keywords.keys():
+        # ids = ''.join(keywords[keyword])
+        listBox.insert(tk.END, keyword)
     listBox.pack()
 
 

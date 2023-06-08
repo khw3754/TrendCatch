@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
+import analyzer
 
 
 
@@ -73,7 +74,7 @@ def find_img(soup, company, link):
 
 
 def print_articles(entries, company, get_encoding):
-
+    # [기사 제목, 링크, [키워드]] 가 들어감
     result = []
 
     entries = entries[::-1]
@@ -169,13 +170,16 @@ def print_articles(entries, company, get_encoding):
                 content = soup.find("div", attrs={"itemprop": "articleBody"})
 
         print(date)
+        # tokens = analyzer.extract_keyword(title, content.text)
         try:
-            print(content.getText().strip())
+            # print(content.getText().strip())
+            tokens = analyzer.extract_keyword(title, content.text)
+            print(tokens)
         except:
-            print(title + "     본문 출력 오류남     " + link)
+            print(title + "     분석 오류 남     " + link)
             continue
 
-        result.append([title, link])
+        result.append([title, link, tokens])
         print()
 
     return result
