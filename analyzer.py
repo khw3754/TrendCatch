@@ -3,9 +3,8 @@
 """
 import sys
 import re
-import time
 import math
-import datetime
+
 
 KEYWORD = dict()
 ARTICLES = dict()   # {id: Article}
@@ -36,7 +35,6 @@ def refine(content):
     # 줄바꿈, 괄호 공백으로 변환
     content = re.sub('[\t\n()=.<>◇\[\]"“‘”’·■○▲△▷▶\-,\']', ' ', content)
     # 대괄호, 큰따옴표, 작은따옴표 제거
-    # content = re.sub('[\[\]"“‘”’·○▲△▷,\']', '', content)
     return content
 
 
@@ -86,21 +84,7 @@ def get_filtered_tf(n_min, n_max):
     global TOKENS
     global ARTICLES
     invalid_ids = []
-    # for tokens in TOKENS:
-    #     # fij 계산
-    #     # {token: 빈도수}
-    #     freq = dict()
-    #     for token in tokens:
-    #         if n_min <= len(token) < n_max:
-    #             if token not in freq:
-    #                 freq[token] = 1
-    #             else:
-    #                 freq[token] += 1
-    #     # if len(freq) == 0:
-    #         # n_min, n_max 사이 크기의 토큰이 없는 경우
-    #         # invalid_ids.append(art_id)
-    #         # print(f'discard \033[31m{art_id}\033[0m')
-    #     TOKENS = freq
+
 
     freq = dict()
     for token in TOKENS:
@@ -250,9 +234,7 @@ def extract_keyword(title, content):
 
     global TOKENS
     global TITLE
-    # print(f'[{datetime.datetime.now()}]')
-    # count_article = 0
-    start_time = time.time()        # [dev]
+
     ''' 
     stage 1 - 모든 기사를 토큰화한다.
     documents_tokens - 각 원소가 토큰화된 기사인 리스트 
@@ -268,22 +250,21 @@ def extract_keyword(title, content):
     크기가 3~10인 토큰만 남긴다. 
     기사의 모든 토큰이 3보다 작은 경우가 있음에 주의.
     '''
-
     get_filtered_tf(3, 11)
-    # print_stage_info(2)
+
     '''
     stage 3 - reduce
     적당히 비슷한 토큰을 합친다.
     TOKENS = {token: 빈도수}
     '''
     TOKENS = reduce(reduce(TOKENS))
-    # print_stage_info(3)
+
     '''
     stage 4 - normalize
     모든 토큰의 TF값 계산
     '''
     normalize_frequency(TOKENS)
-    # print_stage_info(4)
+
     '''
     stage 5 - 점수가 높은 토큰만 남긴다.
     TOKENS = {token: score}
@@ -295,7 +276,7 @@ def extract_keyword(title, content):
         if f > 0.3:
             useful.append(t)
     TOKENS = useful
-    end_time = time.time()          # [dev]
+
     '''
     for i, tokens in TOKENS.items():
         print(f'{ARTICLES[i].title}')
@@ -303,26 +284,6 @@ def extract_keyword(title, content):
             print(f'{t}: {f}')
     '''
 
-    # print("elapsed time: %0.2f" % (end_time - start_time))
-    # print('---------------------------------------------')
     sys.stdout.flush()
 
     return TOKENS
-
-
-# def recommend_by_keyword(keyword, Keywords, Article):
-#     data = Keywords.query.filter(Keywords.keyword==keyword).one()
-#     print(f'[{datetime.datetime.now()}][API 호출]recommend for {keyword}')
-#     print(f'rank: {data.rank} article_id: {data.articles}')
-#     art_ids = list(map(int, data.articles.split(' ')))
-#     # fetch articles from DB
-#     articles = []
-#     for i in art_ids:
-#         articles.append(Article.query.filter(Article.id==i).one())
-#     # 클라이언트에게 반환할 객체 생성
-#     result = []
-#     for article in articles:
-#         tmp = {'title': article.title, 'link': article.link, 'image': article.image, 'press': article.company, 'content': article.content}
-#         result.append(tmp)
-#     sys.stdout.flush()
-#     return result

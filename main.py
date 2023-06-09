@@ -10,7 +10,11 @@ global_selected_keyword = ''
 def crawl_and_analyze():
     global articles
     global keywords
-    articles, keywords = crawler.start_crawl(root)
+    articles, keywords, count = crawler.start_crawl(root)
+
+    # 분석 완료 기사 개수 표시
+    article_count_label = tk.Label(root, text=f"기사 {count}개 분석 완료")
+    article_count_label.place(x=700, y=650)
 
     sorted_keywords = dict(sorted(keywords.items(), key=lambda x: len(x[1]), reverse=True))
 
@@ -145,6 +149,7 @@ search_entry.update()
 
 search_button = tk.Button(root, text="검색", command=search)
 search_button.place(x=search_entry.winfo_x() + search_entry.winfo_width() + 5, y=1)
+
 
 
 # 언론사, 기사 제목, 간략한 내용 몇 줄... , 날짜---- 있으면 좋을 듯?

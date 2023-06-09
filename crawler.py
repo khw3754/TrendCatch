@@ -35,14 +35,15 @@ import rssCrawl
 '''
 테스트 url
 '''
-companies = {"https://www.hani.co.kr/rss/": "hankyoreh",
-             "https://www.khan.co.kr/rss/rssdata/total_news.xml": "kyunghyang",
-             "https://rss.donga.com/total.xml": "donga",
-             "https://rss.mt.co.kr/mt_news.xml": "moneytoday",
-             "http://biz.heraldcorp.com/common/rss_xml.php?ct=0": "herald",
-             "http://rss.edaily.co.kr/edaily_news.xml": "edaily",
-             "https://www.fnnews.com/rss/r20/fn_realnews_all.xml": "financial",
-             "https://www.mbn.co.kr/rss/": "mbn"}
+# companies = {"https://www.hani.co.kr/rss/": "hankyoreh",
+#              "https://www.khan.co.kr/rss/rssdata/total_news.xml": "kyunghyang",
+#              "https://rss.donga.com/total.xml": "donga",
+#              "https://rss.mt.co.kr/mt_news.xml": "moneytoday",
+#              "http://biz.heraldcorp.com/common/rss_xml.php?ct=0": "herald",
+#              "http://rss.edaily.co.kr/edaily_news.xml": "edaily",
+#              "https://www.fnnews.com/rss/r20/fn_realnews_all.xml": "financial",
+#              "https://www.mbn.co.kr/rss/": "mbn"}
+companies = {"https://rss.donga.com/total.xml": "donga"}
 
 def start_crawl(root):
     start = time.time()
@@ -98,7 +99,8 @@ def start_crawl(root):
 
 
         ###### 출력 테스트 ######
-        get_articles = rssCrawl.print_articles(entries, company, res.encoding)
+        get_articles, nums = rssCrawl.print_articles(entries, company, res.encoding)
+        count += nums
         for title, link, date, tokens in get_articles:
             articles[id] = [title, link, company, date]
 
@@ -110,10 +112,7 @@ def start_crawl(root):
 
             id += 1
 
-
-        ###### 저장 테스트 #####
-        # count += rssCrawl.save_articles(entries, company, res.encoding)
-
+        # 퍼센트 위젯 추가
         done_count += 1
         r_show = show_percent + '#' * round((done_count / len(companies)) * 60)
         percent1.config(text=r_show)
@@ -129,10 +128,7 @@ def start_crawl(root):
 
     end = time.time()
     sec = end - start
-    print('걸린 시간:   ' + datetime.timedelta(seconds=sec))
+    print('걸린 시간:   ', end='')
+    print(datetime.timedelta(seconds=sec))
 
-    now = time
-    last = now.strftime('%Y%m%d%H%M%S')[2:]
-
-    # return count, str(datetime.timedelta(seconds=sec)), last
-    return articles, keywords
+    return articles, keywords, count
