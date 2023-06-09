@@ -80,7 +80,7 @@ def start_crawl(root):
 
         html = res.text
 
-        #인코딩 방식 추출
+        # response 에서 인코딩 방식 추출
         try:
             dd = html.index("encoding=")
             get_encoding = html[dd + 10:dd + 16]
@@ -129,7 +129,7 @@ def start_crawl(root):
 
     end = time.time()
     sec = end - start
-    print(datetime.timedelta(seconds=sec))
+    print('걸린 시간:   ' + datetime.timedelta(seconds=sec))
 
     now = time
     last = now.strftime('%Y%m%d%H%M%S')[2:]
