@@ -74,7 +74,7 @@ def find_img(soup, company, link):
 
 
 def print_articles(entries, company, get_encoding):
-    # [기사 제목, 링크, [키워드]] 가 들어감
+    # [기사 제목, 링크, 날짜, [키워드]] 가 들어감
     result = []
 
     entries = entries[::-1]
@@ -179,7 +179,7 @@ def print_articles(entries, company, get_encoding):
             print(title + "     분석 오류 남     " + link)
             continue
 
-        result.append([title, link, tokens])
+        result.append([title, link, date, tokens])
         print()
 
     return result

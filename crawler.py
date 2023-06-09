@@ -2,7 +2,7 @@ import feedparser
 import requests
 import time
 import datetime
-
+import tkinter as tk
 
 import rssCrawl
 
@@ -37,13 +37,23 @@ import rssCrawl
 '''
 companies = {"https://www.mk.co.kr/rss/40300001/": "maeil"}
 
-def start_crawl():
+def start_crawl(root):
     start = time.time()
     count = 0
 
     articles = {}
     keywords = {}
     id = 0
+
+    show_percent = "수집, 분석중  |"
+    percent1 = tk.Label(root, text=show_percent)
+    percent1.place(x=5, y=650)
+
+    done_count = 0
+    done_percent = '| ' + str(done_count / len(companies) * 100) + '%'
+    percent2 = tk.Label(root, text=done_percent)
+    percent2.place(x=570, y=650)
+    percent2.update()
 
     for url, company in companies.items() :
         #먼저 받아옴
@@ -82,8 +92,8 @@ def start_crawl():
 
         ###### 출력 테스트 ######
         get_articles = rssCrawl.print_articles(entries, company, res.encoding)
-        for title, link, tokens in get_articles:
-            articles[id] = [title, link]
+        for title, link, date, tokens in get_articles:
+            articles[id] = [title, link, company, date]
 
             for token in tokens:
                 if keywords.get(token, -1) == -1:
@@ -97,8 +107,18 @@ def start_crawl():
         ###### 저장 테스트 #####
         # count += rssCrawl.save_articles(entries, company, res.encoding)
 
+        show_percent += '#' * (60 // len(companies))
+        percent1.config(text=show_percent)
+        percent1.update()
+
+        done_count += 1
+        done_percent = '| ' + str(round(done_count / len(companies) * 100, 1)) + '%'
+        percent2.config(text=done_percent)
+        percent2.update()
         print("-----------------------------------------------------------")
 
+    # percent1.destroy()
+    # percent2.destroy()
 
     print(count, "개 저장 완료")
 
