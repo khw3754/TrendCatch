@@ -250,7 +250,7 @@ def extract_keyword(title, content):
 
     global TOKENS
     global TITLE
-    print(f'[{datetime.datetime.now()}]')
+    # print(f'[{datetime.datetime.now()}]')
     # count_article = 0
     start_time = time.time()        # [dev]
     ''' 
@@ -303,76 +303,26 @@ def extract_keyword(title, content):
             print(f'{t}: {f}')
     '''
 
-    print("elapsed time: %0.2f" % (end_time - start_time))
-    print('---------------------------------------------')
+    # print("elapsed time: %0.2f" % (end_time - start_time))
+    # print('---------------------------------------------')
     sys.stdout.flush()
 
     return TOKENS
 
 
-# def collect_keyword(db, Keywords):
-#     """
-#     분석된 모든 기사를 키워드로 묶는다.
-#     KEYWORD_MAP = [키워드, freq, [Article 리스트]]
-#     TOKENS = {id: {token: score}}
-#     total_tokens = {token: [count, [art_id]]}
-#     """
-#     global last_analyze
-#     print(f'before collect_keyword(): last_analyze = {last_analyze}')
-#     C, IDs = 0, 1
-#     last_analyze_id = 0
-#     start = time.time()
-#     total_tokens = dict()
-#     for art_id, tokens in TOKENS.items():
-#         for t, score in tokens.items():
-#             if t in total_tokens:
-#                 total_tokens[t][C] += 1
-#                 total_tokens[t][IDs].append(str(art_id))
-#             else:
-#                 total_tokens[t] = [1, [str(art_id)]]
-#         if art_id > last_analyze_id:
-#             last_analyze_id = art_id
-#     # 결과 저장
-#     data = [Keywords(k, info[C], ' '.join(info[IDs])) for k, info in total_tokens.items()]
-#     try:
-#         from kk_editor import app
-#         with app.app_context():
-#             for d in data:
-#                 saved_keyword = Keywords.query.filter(Keywords.keyword == d.keyword).first()
-#                 if saved_keyword:
-#                     # 중복 제거
-#                     saved_keyword.articles += ' ' + d.articles
-#                     article_list = list(saved_keyword.articles.split(' '))
-#                     article_set = set(article_list)
-#                     saved_keyword.rank += len(article_list) - len(article_set)
-#                     saved_keyword.articles = ' '.join(list(article_set))
-#                     db.session.commit()
-#                 else:
-#                     db.session.add(d)
-#                     db.session.commit()
-#     except Exception as e:
-#         print(f'[EROR] [collect_keyword]: {e}')
-#     end = time.time()
-#     print(f'[collect_keyword] elapsed time: {round(end-start, 3)}s')
-#
-#     # 분석 완료한 마지막 기사 id 저장
-#     last_analyze = last_analyze_id
-#     print(f'after collect_keyword(): last_analyze = {last_analyze}')
-
-
-def recommend_by_keyword(keyword, Keywords, Article):
-    data = Keywords.query.filter(Keywords.keyword==keyword).one()
-    print(f'[{datetime.datetime.now()}][API 호출]recommend for {keyword}')
-    print(f'rank: {data.rank} article_id: {data.articles}')
-    art_ids = list(map(int, data.articles.split(' ')))
-    # fetch articles from DB
-    articles = []
-    for i in art_ids:
-        articles.append(Article.query.filter(Article.id==i).one())
-    # 클라이언트에게 반환할 객체 생성
-    result = []
-    for article in articles:
-        tmp = {'title': article.title, 'link': article.link, 'image': article.image, 'press': article.company, 'content': article.content}
-        result.append(tmp)
-    sys.stdout.flush()
-    return result
+# def recommend_by_keyword(keyword, Keywords, Article):
+#     data = Keywords.query.filter(Keywords.keyword==keyword).one()
+#     print(f'[{datetime.datetime.now()}][API 호출]recommend for {keyword}')
+#     print(f'rank: {data.rank} article_id: {data.articles}')
+#     art_ids = list(map(int, data.articles.split(' ')))
+#     # fetch articles from DB
+#     articles = []
+#     for i in art_ids:
+#         articles.append(Article.query.filter(Article.id==i).one())
+#     # 클라이언트에게 반환할 객체 생성
+#     result = []
+#     for article in articles:
+#         tmp = {'title': article.title, 'link': article.link, 'image': article.image, 'press': article.company, 'content': article.content}
+#         result.append(tmp)
+#     sys.stdout.flush()
+#     return result

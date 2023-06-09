@@ -12,11 +12,6 @@ def crawl_and_analyze():
     global keywords
     articles, keywords = crawler.start_crawl(root)
 
-    # for id in articles.keys():
-    #     title, link = articles[id]
-    #     listBox.insert(tk.END, title)
-    print(keywords)
-    print(articles)
     sorted_keywords = dict(sorted(keywords.items(), key=lambda x: len(x[1]), reverse=True))
 
     i = 1

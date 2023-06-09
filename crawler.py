@@ -35,7 +35,14 @@ import rssCrawl
 '''
 테스트 url
 '''
-companies = {"https://www.mk.co.kr/rss/40300001/": "maeil"}
+companies = {"https://www.hani.co.kr/rss/": "hankyoreh",
+             "https://www.khan.co.kr/rss/rssdata/total_news.xml": "kyunghyang",
+             "https://rss.donga.com/total.xml": "donga",
+             "https://rss.mt.co.kr/mt_news.xml": "moneytoday",
+             "http://biz.heraldcorp.com/common/rss_xml.php?ct=0": "herald",
+             "http://rss.edaily.co.kr/edaily_news.xml": "edaily",
+             "https://www.fnnews.com/rss/r20/fn_realnews_all.xml": "financial",
+             "https://www.mbn.co.kr/rss/": "mbn"}
 
 def start_crawl(root):
     start = time.time()
@@ -107,18 +114,16 @@ def start_crawl(root):
         ###### 저장 테스트 #####
         # count += rssCrawl.save_articles(entries, company, res.encoding)
 
-        show_percent += '#' * (60 // len(companies))
-        percent1.config(text=show_percent)
+        done_count += 1
+        r_show = show_percent + '#' * round((done_count / len(companies)) * 60)
+        percent1.config(text=r_show)
         percent1.update()
 
-        done_count += 1
         done_percent = '| ' + str(round(done_count / len(companies) * 100, 1)) + '%'
         percent2.config(text=done_percent)
         percent2.update()
         print("-----------------------------------------------------------")
 
-    # percent1.destroy()
-    # percent2.destroy()
 
     print(count, "개 저장 완료")
 
