@@ -132,11 +132,8 @@ def print_articles(entries, company, get_encoding):
             if content == None:
                 content = soup.find("div", attrs={"itemprop": "articleBody"})
 
-        # tokens = analyzer.kkma_analyze(title, content.text)
-        # tokens = analyzer.extract_keyword(title, content.text)
         try:
             tokens = analyzer.extract_keyword(title, content.text)
-            # tokens = analyzer.kkma_analyze(title, content.text)
             count += 1
         except:
             print(title + "     분석 오류 남     " + link)
