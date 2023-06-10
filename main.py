@@ -48,6 +48,11 @@ def search(event = None):
     article_listBox.delete(0, tk.END)
 
     target = search_entry.get()
+    # 검색 기록 추가
+    all_history = search_history.get(0, tk.END)
+    if target not in all_history:
+        search_history.insert(tk.END, target)
+
     search_result = keywords.get(target, -1)
     if search_result != -1:
         for id in search_result:
@@ -57,6 +62,15 @@ def search(event = None):
     else:
         article_listBox.insert(tk.END, "관련 기사 없음")
         global_selected_keyword = ''
+
+# 검색 기록에 있는 단어 재검색
+def history_research(event = None):
+    history_idx = search_history.curselection()
+    if history_idx:
+        search_entry.delete(0, tk.END)
+        search_entry.insert(0, search_history.get(history_idx[0]))
+        search()
+
 
 
 # 모든 text 블록의 텍스트를 지우는 함수
@@ -152,13 +166,24 @@ search_button.place(x=search_entry.winfo_x() + search_entry.winfo_width() + 5, y
 
 
 
-# 언론사, 기사 제목, 간략한 내용 몇 줄... , 날짜---- 있으면 좋을 듯?
-# 웹에서 보기 버튼
-# article에 제목, 링크는 있고 언론사, 날짜 추가하면 될 듯
+'''
+오른쪽 구간
+'''
+
+# 검색 기록
+search_history_label = tk.Label(root, text="검색 기록")
+search_history_label.place(x=article_listBox.winfo_x() + article_listBox.winfo_width() + 30, y=article_listBox.winfo_y())
+search_history_label.update()
+
+search_history = tk.Listbox(root, width=25, height=10)
+search_history.bind("<Double-Button-1>", history_research)
+search_history.place(x=search_history_label.winfo_x() + search_history_label.winfo_width() + 5, y=search_history_label.winfo_y())
+search_history.update()
+
 
 # 언론사 표시
 company_label = tk.Label(root, text="언론사    : ")
-company_label.place(x=article_listBox.winfo_x() + article_listBox.winfo_width() + 30, y=article_listBox.winfo_y())
+company_label.place(x=search_history_label.winfo_x(), y=search_history.winfo_y() + search_history.winfo_height() + 50)
 company_label.update()
 
 company_text = tk.Text(root, width=20, height=1, state='disabled')
@@ -195,7 +220,6 @@ link_text = tk.Text(root, width=40, height=5, state='disabled')
 link_text.insert(tk.END, "")
 link_text.place(x=date_text.winfo_x(), y=date_text.winfo_y() + 30)
 link_text.update()
-
 
 
 # 브라우저 연결 버튼
