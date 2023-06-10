@@ -20,7 +20,7 @@ def crawl_and_analyze():
 
     i = 1
     for keyword in sorted_keywords.keys():
-        keyword_listBox.insert(tk.END, str(i) + ".   " + keyword)
+        keyword_listBox.insert(tk.END, str(i) + ".  " + keyword)
         i += 1
     root.update()
 

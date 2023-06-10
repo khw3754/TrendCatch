@@ -73,7 +73,11 @@ def print_articles(entries, company, get_encoding):
             'User-Agent': ('Mozilla/5.0 (Windows NT 10.0;Win64; x64)\
                     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98\
                     Safari/537.36'), }
-        article_res = requests.get(link, headers=request_headers)
+        try:
+            article_res = requests.get(link, headers=request_headers)
+        except:
+            continue
+
         article_res.encoding = get_encoding
         soup = BeautifulSoup(article_res.text, "html.parser")
 
@@ -129,9 +133,9 @@ def print_articles(entries, company, get_encoding):
                 content = soup.find("div", attrs={"itemprop": "articleBody"})
 
         # tokens = analyzer.kkma_analyze(title, content.text)
-        tokens = analyzer.extract_keyword(title, content.text)
+        # tokens = analyzer.extract_keyword(title, content.text)
         try:
-            # tokens = analyzer.extract_keyword(title, content.text)
+            tokens = analyzer.extract_keyword(title, content.text)
             # tokens = analyzer.kkma_analyze(title, content.text)
             count += 1
         except:
