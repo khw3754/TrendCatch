@@ -1,6 +1,8 @@
 import tkinter as tk
 import crawler
 import webbrowser
+import smtplib
+from email.mime.text import MIMEText
 
 
 articles = {}
@@ -16,10 +18,10 @@ def crawl_and_analyze():
     article_count_label = tk.Label(root, text=f"기사 {count}개 분석 완료")
     article_count_label.place(x=700, y=650)
 
-    sorted_keywords = dict(sorted(keywords.items(), key=lambda x: len(x[1]), reverse=True))
+    keywords = dict(sorted(keywords.items(), key=lambda x: len(x[1]), reverse=True))
 
     i = 1
-    for keyword in sorted_keywords.keys():
+    for keyword in keywords.keys():
         keyword_listBox.insert(tk.END, str(i) + ".  " + keyword)
         i += 1
     root.update()
@@ -118,11 +120,56 @@ def open_browser():
     if link:
         webbrowser.open_new_tab(link[:-1])
 
+'''
+email로 상위 10개 키워드 기사 5개씩 전송해주는 함수
+'''
+def send_email():
+    sendAddress = "trendcatch1@naver.com"
+    recvAddress = mail_address.get('1.0', tk.END)
+
+    pw = "####비밀번호####"
+
+    smtpName = "smtp.naver.com"
+    smtpPort = 587
+
+    # 메일 구성
+    mail_text = 'Trend Catch\n오늘의 Top 10 키워드를 보내드립니다.\n\n'
+    if keywords:
+        for i, key in enumerate(list(keywords.keys())[:10]):
+            ids = keywords[key]
+            mail_text += f'Top {i+1} : {key}\n'
+            for id in ids[:5]:
+                title, link, company, date = articles[id]
+                mail_text += f'     {title}   - {company}       링크: {link}\n'
+
+            mail_text += '\n'
+
+
+    # 메일 전송
+    try:
+        msg = MIMEText(mail_text)
+        msg['Subject'] = "Trend Catch 오늘의 기사 전송"
+        msg['From'] = sendAddress
+        msg['To'] = recvAddress
+
+        s = smtplib.SMTP(smtpName, smtpPort)    # 메일 서버 연결
+        s.starttls()    # TLS 보안처리
+        s.login(sendAddress, pw)    # 로그인
+        s.sendmail(sendAddress, recvAddress, msg.as_string())
+        s.close()
+
+        state = '메일 전송에 성공하였습니다.'
+    except:
+        state = '메일 전송에 실패하였습니다.'
+
+    mail_state_label.config(text=state)
+    mail_state_label.place(x=mail_address.winfo_x(), y=mail_address.winfo_y() + 25)
+
 
 
 
 root = tk.Tk()
-root.geometry("1000x680")
+root.geometry("970x680")
 root.title("Trend Catch")
 
 crawl_button = tk.Button(root, text="기사 수집/분석", command=crawl_and_analyze)
@@ -225,6 +272,20 @@ link_text.update()
 # 브라우저 연결 버튼
 open_button = tk.Button(root, text="기사 열기", command=open_browser, width=10, height=3)
 open_button.place(x=link_text.winfo_x(), y=link_text.winfo_y() + 100)
+open_button.update()
+
+# 메일 보내기 기능
+mail_button = tk.Button(root, text="주요 기사\n Email로 받기", command=send_email, width=10, height=3)
+mail_button.place(x=open_button.winfo_x() + open_button.winfo_width() + 10, y=open_button.winfo_y())
+
+mail_address = tk.Text(root, width=40, height=1, state='normal')
+mail_address.place(x=open_button.winfo_x(), y=open_button.winfo_y() + open_button.winfo_height() + 10)
+mail_address.update()
+
+mail_label = tk.Label(root, text="Email 주소 :")
+mail_label.place(x=link_label.winfo_x() - 10, y=mail_address.winfo_y()-2)
+
+mail_state_label = tk.Label(root, text="")
 
 
 root.mainloop()

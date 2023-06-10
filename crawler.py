@@ -9,33 +9,33 @@ import rssCrawl
 '''
 배포 url
 '''
-companies = {"https://fs.jtbc.co.kr/RSS/newsflash.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/politics.xml": "jtbc",
-             "https://fs.jtbc.co.kr/RSS/economy.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/society.xml": "jtbc",
-             "https://fs.jtbc.co.kr/RSS/international.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/culture.xml": "jtbc",
-             "https://fs.jtbc.co.kr/RSS/entertainment.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/sports.xml" : "jtbc",
-             "http://rss.kmib.co.kr/data/kmibRssAll.xml": "kukmin",
-             "https://rss.hankyung.com/feed/economy.xml": "hankyung", "https://rss.hankyung.com/feed/it.xml": "hankyung",
-             "https://rss.hankyung.com/feed/international.xml": "hankyung", "https://rss.hankyung.com/feed/life.xml": "hankyung",
-             "https://rss.hankyung.com/feed/sports.xml": "hankyung", "https://rss.hankyung.com/feed/stock.xml": "hankyung",
-             "https://rss.hankyung.com/feed/land.xml": "hankyung", "https://rss.hankyung.com/feed/politics.xml": "hankyung",
-             "https://rss.hankyung.com/feed/society.xml": "hankyung", "https://rss.hankyung.com/feed/hei.xml": "hankyung",
-             "https://www.mk.co.kr/rss/40300001/": "maeil",
-             "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=01&plink=RSSREADER": "sbs", "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=02&plink=RSSREADER": "sbs",
-             "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=03&plink=RSSREADER": "sbs", "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=07&plink=RSSREADER": "sbs",
-             "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=08&plink=RSSREADER": "sbs", "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=14&plink=RSSREADER": "sbs",
-             "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=09&plink=RSSREADER": "sbs",
-             "https://www.hani.co.kr/rss/": "hankyoreh",
-             "https://www.khan.co.kr/rss/rssdata/total_news.xml": "kyunghyang",
-             "https://rss.donga.com/total.xml": "donga",
-             "https://rss.mt.co.kr/mt_news.xml": "moneytoday",
-             "http://biz.heraldcorp.com/common/rss_xml.php?ct=0": "herald",
-             "http://rss.edaily.co.kr/edaily_news.xml": "edaily",
-             "https://www.fnnews.com/rss/r20/fn_realnews_all.xml": "financial",
-             "https://www.mbn.co.kr/rss/": "mbn"}
+# companies = {"https://fs.jtbc.co.kr/RSS/newsflash.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/politics.xml": "jtbc",
+#              "https://fs.jtbc.co.kr/RSS/economy.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/society.xml": "jtbc",
+#              "https://fs.jtbc.co.kr/RSS/international.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/culture.xml": "jtbc",
+#              "https://fs.jtbc.co.kr/RSS/entertainment.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/sports.xml" : "jtbc",
+#              "http://rss.kmib.co.kr/data/kmibRssAll.xml": "kukmin",
+#              "https://rss.hankyung.com/feed/economy.xml": "hankyung", "https://rss.hankyung.com/feed/it.xml": "hankyung",
+#              "https://rss.hankyung.com/feed/international.xml": "hankyung", "https://rss.hankyung.com/feed/life.xml": "hankyung",
+#              "https://rss.hankyung.com/feed/sports.xml": "hankyung", "https://rss.hankyung.com/feed/stock.xml": "hankyung",
+#              "https://rss.hankyung.com/feed/land.xml": "hankyung", "https://rss.hankyung.com/feed/politics.xml": "hankyung",
+#              "https://rss.hankyung.com/feed/society.xml": "hankyung", "https://rss.hankyung.com/feed/hei.xml": "hankyung",
+#              "https://www.mk.co.kr/rss/40300001/": "maeil",
+#              "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=01&plink=RSSREADER": "sbs", "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=02&plink=RSSREADER": "sbs",
+#              "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=03&plink=RSSREADER": "sbs", "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=07&plink=RSSREADER": "sbs",
+#              "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=08&plink=RSSREADER": "sbs", "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=14&plink=RSSREADER": "sbs",
+#              "https://news.sbs.co.kr/news/SectionRssFeed.do?sectionId=09&plink=RSSREADER": "sbs",
+#              "https://www.hani.co.kr/rss/": "hankyoreh",
+#              "https://www.khan.co.kr/rss/rssdata/total_news.xml": "kyunghyang",
+#              "https://rss.donga.com/total.xml": "donga",
+#              "https://rss.mt.co.kr/mt_news.xml": "moneytoday",
+#              "http://biz.heraldcorp.com/common/rss_xml.php?ct=0": "herald",
+#              "http://rss.edaily.co.kr/edaily_news.xml": "edaily",
+#              "https://www.fnnews.com/rss/r20/fn_realnews_all.xml": "financial",
+#              "https://www.mbn.co.kr/rss/": "mbn"}
 '''
 테스트 url
 '''
-# companies = {"https://rss.donga.com/total.xml": "donga"}
+companies = {"https://rss.donga.com/total.xml": "donga"}
 
 def start_crawl(root):
     start = time.time()
