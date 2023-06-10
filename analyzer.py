@@ -161,6 +161,19 @@ def reduce(term_frequencies):
 
 def normalize_frequency(tokens):
     '''
+    먼저 숫자로 시작하거나 영어로 시작하는 단어, 불필요한 단어 삭제
+    '''
+    remove_target = '0123456789abcdefghijklmnopqrstuvwxyz것'
+    remove_target2 = ['밝혔다', '말했다', '지난', '이라', '따르면', '중이다', '알려졌다', '뉴시스', '정확한', '드러']
+    remove_tail = ['했다', '혔다', '됐다', '졌다', '이다', '였다', '냈다', '으로']
+    save_targets = []
+    for t in tokens.keys():
+        if t[0] in remove_target or t in remove_target2 or t[-2:] in remove_tail:
+            save_targets.append(t)
+    for target in save_targets:
+        del tokens[target]
+
+    '''
     토큰의 빈도를 최대값으로 나눈다.
     tokens - {term: freq} 딕셔너리(기사 한 개)
     '''
@@ -168,7 +181,7 @@ def normalize_frequency(tokens):
     for t, f in tokens.items():
         # 제목에 등장한 키워드 가중치
         if t in TITLE:
-            tokens[t] = round(f/max_freq*(1.2), 2)
+            tokens[t] = round(f/max_freq*(3), 2)
         else:
             tokens[t] = round(f/max_freq, 2)
 
@@ -208,22 +221,6 @@ def tf_idf_score(tf, idf):
         result.append(scores)
     return result
 
-
-def print_stage_info(stage):
-    stage_name = 'unnamed'
-    if stage == 1:
-        stage_name = 'tokenize&map'
-    elif stage == 2:
-        stage_name = 'filter'
-    elif stage == 3:
-        stage_name = 'reduce'
-    elif stage == 4:
-        stage_name = 'normalization'
-    elif stage == 5:
-        stage_name = 'IDF'
-    elif stage == 6:
-        stage_name = 'prunning'
-    print('[stage%d] %15s is done.' % (stage, stage_name))
 
 
 def extract_keyword(title, content):
@@ -269,7 +266,6 @@ def extract_keyword(title, content):
     stage 5 - 점수가 높은 토큰만 남긴다.
     TOKENS = {token: score}
     '''
-
     # 점수가 기준 이상인 토큰
     useful = []
     for t, f in TOKENS.items():

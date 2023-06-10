@@ -99,7 +99,10 @@ def print_articles(entries, company, get_encoding):
 
             if company == "donga":
                 # 동아일보 본문만 남기고 좋아요 구독 같은 거 없애줌
-                content.find(attrs={"class": "article_footer"}).decompose()
+                try:
+                    content.find(attrs={"class": "article_footer"}).decompose()
+                except:
+                    continue
 
         #### 한국경제, 경향신문 본문 ####
         elif company == "hankyung" or company == "kyunghyang":
@@ -125,9 +128,11 @@ def print_articles(entries, company, get_encoding):
             if content == None:
                 content = soup.find("div", attrs={"itemprop": "articleBody"})
 
-
+        # tokens = analyzer.kkma_analyze(title, content.text)
+        tokens = analyzer.extract_keyword(title, content.text)
         try:
-            tokens = analyzer.extract_keyword(title, content.text)
+            # tokens = analyzer.extract_keyword(title, content.text)
+            # tokens = analyzer.kkma_analyze(title, content.text)
             count += 1
         except:
             print(title + "     분석 오류 남     " + link)
