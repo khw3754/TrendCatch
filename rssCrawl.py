@@ -81,56 +81,56 @@ def print_articles(entries, company, get_encoding):
         article_res.encoding = get_encoding
         soup = BeautifulSoup(article_res.text, "html.parser")
 
-
-        #### jtbc 본문 ####
-        if company == "jtbc" :
-            '''
-            날짜를 받아옴 (수정있을 시 수정날짜로 받아옴)
-            '''
-            date = soup.find("span", attrs={"class": "artical_date"})
-            date = date.findAll("span")[-1]
-            date = date_format(date.text, company)
-
-            content = soup.find("div", attrs={"class": "article_content"})
-
-        #### 국민일보, 매일경제, 머니투데이, 헤럴드경제, 이데일리, mbn, 동아일보 본문 ####
-        elif company in ["kukmin", "maeil", "moneytoday", "herald", "edaily", "mbn", "donga"] :
-            content = soup.find("div", attrs={"itemprop": "articleBody"})
-
-            if company == "kukmin":
-                date = soup.findAll("div", attrs={"class":"date"})[-1]
+        # 혹시 모를 예외처리
+        try:
+            #### jtbc 본문 ####
+            if company == "jtbc" :
+                '''
+                날짜를 받아옴 (수정있을 시 수정날짜로 받아옴)
+                '''
+                date = soup.find("span", attrs={"class": "artical_date"})
+                date = date.findAll("span")[-1]
                 date = date_format(date.text, company)
 
-            if company == "donga":
-                # 동아일보 본문만 남기고 좋아요 구독 같은 거 없애줌
-                try:
-                    content.find(attrs={"class": "article_footer"}).decompose()
-                except:
-                    continue
+                content = soup.find("div", attrs={"class": "article_content"})
 
-        #### 한국경제, 경향신문 본문 ####
-        elif company == "hankyung" or company == "kyunghyang":
-            '''날짜 처리'''
-            if company == "kyunghyang":
-                date = soup.find("div", attrs={"class": "byline"})
-                date = date.findAll("em")[-1]
-                date = date_format(date.text, company)
-
-            content = soup.find("div", attrs={"itemprop": "articleBody"})
-
-        #### sbs 본문 ####
-        elif company == "sbs":
-            content = soup.find("div", attrs={"class": "article_cont_area"})
-
-        #### 한겨래 본문 ####
-        elif company == "hankyoreh":
-            content = soup.find("div", attrs={"class": "text"})
-
-        #### 파이낸셜 본문 ####
-        elif company == "financial":
-            content = soup.find("div", attrs={"id": "article_content"})
-            if content == None:
+            #### 국민일보, 매일경제, 머니투데이, 헤럴드경제, 이데일리, mbn, 동아일보 본문 ####
+            elif company in ["kukmin", "maeil", "moneytoday", "herald", "edaily", "mbn", "donga"] :
                 content = soup.find("div", attrs={"itemprop": "articleBody"})
+
+                if company == "kukmin":
+                    date = soup.findAll("div", attrs={"class":"date"})[-1]
+                    date = date_format(date.text, company)
+
+                if company == "donga":
+                    # 동아일보 본문만 남기고 좋아요 구독 같은 거 없애줌
+                    content.find(attrs={"class": "article_footer"}).decompose()
+
+            #### 한국경제, 경향신문 본문 ####
+            elif company == "hankyung" or company == "kyunghyang":
+                '''날짜 처리'''
+                if company == "kyunghyang":
+                    date = soup.find("div", attrs={"class": "byline"})
+                    date = date.findAll("em")[-1]
+                    date = date_format(date.text, company)
+
+                content = soup.find("div", attrs={"itemprop": "articleBody"})
+
+            #### sbs 본문 ####
+            elif company == "sbs":
+                content = soup.find("div", attrs={"class": "article_cont_area"})
+
+            #### 한겨래 본문 ####
+            elif company == "hankyoreh":
+                content = soup.find("div", attrs={"class": "text"})
+
+            #### 파이낸셜 본문 ####
+            elif company == "financial":
+                content = soup.find("div", attrs={"id": "article_content"})
+                if content == None:
+                    content = soup.find("div", attrs={"itemprop": "articleBody"})
+        except:
+            continue
 
         try:
             tokens = analyzer.extract_keyword(title, content.text)
