@@ -52,7 +52,7 @@ def search(event = None):
     target = search_entry.get()
     # 검색 기록 추가
     all_history = search_history.get(0, tk.END)
-    if target not in all_history:
+    if target != '' and target not in all_history:
         search_history.insert(tk.END, target)
 
     search_result = keywords.get(target, -1)
@@ -127,7 +127,7 @@ def send_email():
     sendAddress = "trendcatch1@naver.com"
     recvAddress = mail_address.get('1.0', tk.END)
 
-    pw = "####비밀번호####"
+    pw = "trendcatch123!"
 
     smtpName = "smtp.naver.com"
     smtpPort = 587
