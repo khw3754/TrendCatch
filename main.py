@@ -143,6 +143,10 @@ def send_email():
                 mail_text += f'     {title}   - {company}       링크: {link}\n'
 
             mail_text += '\n'
+    else:
+        mail_state_label.config(text="기사 수집/분석을 완료하여 주세요.")
+        mail_state_label.place(x=mail_address.winfo_x(), y=mail_address.winfo_y() + 25)
+        return
 
 
     # 메일 전송
