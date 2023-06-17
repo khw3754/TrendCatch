@@ -52,12 +52,15 @@ def date_format(date, company):
     return year + month + day + clock
 
 
-
+'''
+기사들을 각각 크롤링하는 함수
+'''
 def print_articles(entries, company, get_encoding):
     # [기사 제목, 링크, 날짜, [키워드]] 가 들어감
     result = []
     count = 0
 
+    # 기사 엔트리 = 기사 리스트
     entries = entries[::-1]
     for entry in entries:
         title = entry["title"]
@@ -68,7 +71,7 @@ def print_articles(entries, company, get_encoding):
         except:
             date = "date없음"
 
-
+        # 헤더를 변경해야 본문을 보내주는 언론사 있음
         request_headers = {
             'User-Agent': ('Mozilla/5.0 (Windows NT 10.0;Win64; x64)\
                     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98\
@@ -132,6 +135,7 @@ def print_articles(entries, company, get_encoding):
         except:
             continue
 
+        # 본문은 analyzer에서 분석
         try:
             tokens = analyzer.extract_keyword(title, content.text)
             count += 1
@@ -139,6 +143,8 @@ def print_articles(entries, company, get_encoding):
             print(title + "     분석 오류 남     " + link)
             continue
 
+        # [제목, 링크, 날짜, [키워드]] 형태로 리스트에 넣음
         result.append([title, link, date, tokens])
 
+    # result와 기사 개수 반환
     return result, count

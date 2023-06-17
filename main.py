@@ -9,29 +9,42 @@ articles = {}
 keywords = {}
 global_selected_keyword = ''
 
+'''
+크롤링, 분석 시작하는 함수
+'''
 def crawl_and_analyze():
     global articles
     global keywords
+    # 이미 분석이 완료 됐다면 바로 return
+    if articles:
+        return
+
+    # start_crawl 함수 호출
     articles, keywords, count = crawler.start_crawl(root)
 
     # 분석 완료 기사 개수 표시
     article_count_label = tk.Label(root, text=f"기사 {count}개 분석 완료")
     article_count_label.place(x=700, y=650)
 
+    # 기사가 많은 순으로 정렬
     keywords = dict(sorted(keywords.items(), key=lambda x: len(x[1]), reverse=True))
 
+    # 리스트 박스에 표시
     i = 1
     for keyword in keywords.keys():
         keyword_listBox.insert(tk.END, str(i) + ".  " + keyword)
         i += 1
     root.update()
 
-
+'''
+기사 리스트를 표시하는 함수
+'''
 def showList(event = None):
     global keywords
     global articles
     global global_selected_keyword
 
+    # 키워드 리스트 박스에서 현재 선택된 단어를 가져옴
     selected_index = keyword_listBox.curselection()
     if selected_index:
         selected_keyword = keyword_listBox.get(selected_index)
@@ -39,22 +52,28 @@ def showList(event = None):
         selected_keyword = selected_keyword.split()[1]
         global_selected_keyword = selected_keyword
 
+        # 선택된 키워드의 기사 id 리스트를 받아서 리스트 박스에 표시
         article_listBox.delete(0, tk.END)
         for id in keywords[selected_keyword]:
             title, link, company, date = articles[id]
             article_listBox.insert(tk.END, title)
         root.update()
 
+'''
+키워드를 검색하는 함수
+'''
 def search(event = None):
     global global_selected_keyword
     article_listBox.delete(0, tk.END)
 
+    # 검색 엔트리에서 텍스트를 받음
     target = search_entry.get()
     # 검색 기록 추가
     all_history = search_history.get(0, tk.END)
     if target != '' and target not in all_history:
         search_history.insert(tk.END, target)
 
+    # 해당 키워드가 존재하는 키워드면 기사 리스트 박스에 표시, 없으면 "관련 기사 없음" 표시
     search_result = keywords.get(target, -1)
     if search_result != -1:
         for id in search_result:
@@ -65,44 +84,60 @@ def search(event = None):
         article_listBox.insert(tk.END, "관련 기사 없음")
         global_selected_keyword = ''
 
-# 검색 기록에 있는 단어 재검색
+'''
+검색 기록에 있는 단어 재검색
+'''
 def history_research(event = None):
+    # 검색 기록 박스에서 선택된 키워드 가져옴
     history_idx = search_history.curselection()
     if history_idx:
+        # 검색 창에 해당 키워드 넣고 search 함수 실행
         search_entry.delete(0, tk.END)
         search_entry.insert(0, search_history.get(history_idx[0]))
         search()
 
 
-
-# 모든 text 블록의 텍스트를 지우는 함수
+'''
+모든 text 블록의 텍스트를 지우는 함수
+'''
 def all_delete():
+    # 블록을 normal 모드로 바꾸고
     link_text.config(state='normal')
     company_text.config(state='normal')
     title_text.config(state='normal')
     date_text.config(state='normal')
 
+    # 텍스트 삭제
     company_text.delete('1.0', tk.END)
     title_text.delete('1.0', tk.END)
     date_text.delete('1.0', tk.END)
     link_text.delete('1.0', tk.END)
 
-# 모든 text 블록을 disabled 상태로 만드는 함수
-# - 사용자가 입력할 수 없도록 함
+'''
+모든 text 블록을 disabled 상태로 만드는 함수
+- 사용자가 입력할 수 없도록 함
+'''
 def all_disabled():
     link_text.config(state='disabled')
     company_text.config(state='disabled')
     title_text.config(state='disabled')
     date_text.config(state='disabled')
 
+'''
+기사 리스트 박스에서 선택된 기사의 정보를 표시하는 함수
+'''
 def show_article_info(event = None):
+    # 먼저 텍스트 블록을 모두 비우고
     all_delete()
 
+    # 선택된 기사를 가져온 후
     index = article_listBox.curselection()
-
     if global_selected_keyword and index:
+        # keywords 에서 해당 기사의 제목, 링크, 언론사, 날짜를 받음
         article_id = keywords[global_selected_keyword][index[0]]
         title, link, company, date = articles[article_id]
+
+        # 모두 텍스트 블록에 표시
         company_text.insert(tk.END, company)
         title_text.insert(tk.END, title)
         link_text.insert(tk.END, link)
@@ -112,13 +147,19 @@ def show_article_info(event = None):
         date_text.insert(tk.END, date)
         root.update()
 
+    # 표시한 후 모두 disabled 상태로 전환
     all_disabled()
 
-
+'''
+해당 기사를 브라우저로 열어주는 함수
+'''
 def open_browser():
+    # 링크를 받아서
     link = link_text.get('1.0', tk.END)
     if link:
+        # 브라우저로 오픈
         webbrowser.open_new_tab(link[:-1])
+
 
 '''
 email로 상위 10개 키워드 기사 5개씩 전송해주는 함수
@@ -144,6 +185,7 @@ def send_email():
 
             mail_text += '\n'
     else:
+        # 아직 크롤링을 안한 상태라면 텍스트 표시
         mail_state_label.config(text="기사 수집/분석을 완료하여 주세요.")
         mail_state_label.place(x=mail_address.winfo_x(), y=mail_address.winfo_y() + 25)
         return
@@ -171,11 +213,15 @@ def send_email():
 
 
 
-
+'''
+GUI 생성
+크기 : 970x680
+'''
 root = tk.Tk()
 root.geometry("970x680")
 root.title("Trend Catch")
 
+# 버튼들 생성
 crawl_button = tk.Button(root, text="기사 수집/분석", command=crawl_and_analyze)
 crawl_button.place(x=1, y=1)
 root.update()
@@ -187,7 +233,7 @@ show_list_button.update()
 show_article_info_button = tk.Button(root, text="기사 정보 보기", command=show_article_info)
 show_article_info_button.place(x=show_list_button.winfo_x() + show_list_button.winfo_width(), y=1)
 
-# keyword 라벨
+# keyword 라벨, 리스트박스
 keywords_label = tk.Label(root, text="keyword 순위")
 keywords_label.place(x=5, y=30)
 root.update()
@@ -197,7 +243,7 @@ keyword_listBox.bind("<Double-Button-1>", showList)
 keyword_listBox.place(x=5, y=keywords_label.winfo_y() + keywords_label.winfo_height())
 root.update()
 
-
+# 기사 리스트박스, 라벨
 article_listBox = tk.Listbox(root, height=35, width=45)
 article_listBox.place(x=keyword_listBox.winfo_width()+10, y=keyword_listBox.winfo_y())
 article_listBox.bind("<Double-Button-1>", show_article_info)

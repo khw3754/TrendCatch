@@ -7,7 +7,7 @@ import tkinter as tk
 import rssCrawl
 
 '''
-배포 url
+최종 url
 '''
 companies = {"https://fs.jtbc.co.kr/RSS/newsflash.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/politics.xml": "jtbc",
              "https://fs.jtbc.co.kr/RSS/economy.xml": "jtbc", "https://fs.jtbc.co.kr/RSS/society.xml": "jtbc",
@@ -37,6 +37,9 @@ companies = {"https://fs.jtbc.co.kr/RSS/newsflash.xml": "jtbc", "https://fs.jtbc
 '''
 # companies = {"https://rss.donga.com/total.xml": "donga"}
 
+'''
+크롤링을 시작하는 함수
+'''
 def start_crawl(root):
     start = time.time()
     count = 0
@@ -45,10 +48,11 @@ def start_crawl(root):
     keywords = {}
     id = 0
 
+    # GUI에 퍼센트 표시
     show_percent = "수집, 분석중  |"
     percent1 = tk.Label(root, text=show_percent)
     percent1.place(x=5, y=650)
-
+    # 퍼센트 계산함
     done_count = 0
     done_percent = '| ' + str(done_count / len(companies) * 100) + '%'
     percent2 = tk.Label(root, text=done_percent)
@@ -82,17 +86,20 @@ def start_crawl(root):
             pass
         html = res.text
 
+        # feedparser 로 파싱
         d = feedparser.parse(html)
 
+        # 기사 엔트리
         entries = d.entries
         entry_count = len(entries)
 
         print(entry_count, company, res.encoding)
 
-
-        ###### 출력 테스트 ######
+        # rssCrawl의 print_articles에 기사 엔트리 넘겨서 크롤링 시킴
         get_articles, nums = rssCrawl.print_articles(entries, company, res.encoding)
         count += nums
+
+        # 분석된 기사들을 articles와 keywords로 정리함
         for title, link, date, tokens in get_articles:
             articles[id] = [title, link, company, date]
 
@@ -104,7 +111,7 @@ def start_crawl(root):
 
             id += 1
 
-        # 퍼센트 위젯 추가
+        # 퍼센트 위젯
         done_count += 1
         r_show = show_percent + '#' * round((done_count / len(companies)) * 60)
         percent1.config(text=r_show)
