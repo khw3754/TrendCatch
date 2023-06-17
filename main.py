@@ -3,6 +3,7 @@ import crawler
 import webbrowser
 import smtplib
 from email.mime.text import MIMEText
+import crawler
 
 
 articles = {}
@@ -218,7 +219,7 @@ GUI 생성
 크기 : 970x680
 '''
 root = tk.Tk()
-root.geometry("970x680")
+root.geometry("949x680")
 root.title("Trend Catch")
 
 # 버튼들 생성
@@ -337,6 +338,7 @@ mail_label.place(x=link_label.winfo_x() - 10, y=mail_address.winfo_y()-2)
 
 mail_state_label = tk.Label(root, text="")
 
-
+width = title_text.winfo_x() + title_text.winfo_width() + 10
+root.geometry(f"{width}x680")
 root.mainloop()
 
