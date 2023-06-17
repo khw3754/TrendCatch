@@ -50,14 +50,20 @@ def start_crawl(root):
 
     # GUI에 퍼센트 표시
     show_percent = "수집, 분석중  |"
+    show_percent += '##########' * 6
     percent1 = tk.Label(root, text=show_percent)
     percent1.place(x=5, y=650)
+    percent1.update()
     # 퍼센트 계산함
     done_count = 0
     done_percent = '| ' + str(done_count / len(companies) * 100) + '%'
     percent2 = tk.Label(root, text=done_percent)
-    percent2.place(x=570, y=650)
+    percent2.place(x=5 + percent1.winfo_width(), y=650)
     percent2.update()
+
+    show_percent = "수집, 분석중  |"
+    percent1.config(text=show_percent)
+    percent1.update()
 
     for url, company in companies.items() :
         #먼저 받아옴
